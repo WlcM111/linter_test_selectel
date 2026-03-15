@@ -1,0 +1,45 @@
+version: "2"
+
+linters:
+  default: none
+  enable:
+    - logcheck
+  settings:
+    custom:
+      logcheck:
+        type: module
+        description: Check slog and zap log records.
+        settings:
+          enabled-rules:
+            - lowercase
+            - english
+            - charset
+            - sensitive
+          allowed-punctuation: ""
+          allow-template-syntax: false
+          sensitive-keywords:
+            - password
+            - passwd
+            - pwd
+            - secret
+            - api_key
+            - token
+            - access_token
+            - refresh_token
+            - client_secret
+            - private_key
+            - cookie
+            - session
+          sensitive-patterns:
+            - (?i)pass(word|wd)?
+            - (?i)api[._-]?key
+            - (?i)(access|refresh)?[._-]?token
+          sensitive-message-patterns:
+            - (?i)\b(pass(word|wd)?|pwd|token|api[._-]?key|access[._-]?token|refresh[._-]?token|client[._-]?secret|private[._-]?key|cookie|session)\b\s*[:=]
+            - (?i)\bbearer\b\s+
+
+issues:
+  exclude-dirs:
+    - testdata
+    - examples
+    - docs

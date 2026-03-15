@@ -1,0 +1,7 @@
+version: v2.11.3
+name: custom-gcl
+destination: ./bin
+plugins:
+  - module: github.com/WlcM111/linter_test_selectel
+    path: .
+    import: github.com/WlcM111/linter_test_selectel/module

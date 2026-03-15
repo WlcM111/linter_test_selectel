@@ -1,0 +1,7 @@
+/bin
+/dist
+*.so
+*.test
+coverage.out
+.DS_Store
+scratch/

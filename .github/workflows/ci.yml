@@ -1,0 +1,49 @@
+name: ci
+
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        go-version: ['1.23', '1.25']
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: ${{ matrix.go-version }}
+          cache: true
+
+      - name: Test
+        run: go test ./...
+
+      - name: Build packages
+        run: go build ./...
+
+      - name: Build Go plugin
+        run: |
+          mkdir -p dist
+          go build -buildmode=plugin -o ./dist/logcheck.so ./plugin
+
+  golangci-custom:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: actions/setup-go@v6
+        with:
+          go-version: '1.25'
+          cache: true
+
+      - name: Install golangci-lint
+        run: |
+          curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b ./bin v2.11.3
+
+      - name: Build custom golangci-lint
+        run: ./bin/golangci-lint custom -v
+
+      - name: Run custom golangci-lint
+        run: ./bin/custom-gcl run --config .golangci.yml ./...s
